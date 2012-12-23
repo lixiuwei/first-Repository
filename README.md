@@ -1,20 +1,25 @@
 first-Repository
 ================
 
-
 import java.io.*;
 public class Method
 {
-	private int intinput() throws IOException,NumberFormatException
+	private int intinput() throws 
+
+IOException,NumberFormatException
 	{
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br=new BufferedReader(new 
+
+InputStreamReader(System.in));
 		String str=br.readLine();
 		int i=Integer.parseInt(str);
 		return i;
 	}
 	private String stringinput() throws IOException
 	{
-		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		BufferedReader br=new BufferedReader(new 
+
+InputStreamReader(System.in));
 		String str=br.readLine();
 		return str;
 	}
@@ -112,7 +117,9 @@ public class Stop
 	{
 		if(location==this.size)
 		{
-			System.out.println(this.peek().car_no+"号车离开停车场");
+			System.out.println(this.peek().car_no+"号
+
+车离开停车场");
 			this.pop();
 		}
 		else
@@ -123,7 +130,9 @@ public class Stop
 				t.push(this.peek());
 				this.pop();
 			}
-			System.out.println(this.peek().car_no+"号车离开停车场");
+			System.out.println(this.peek().car_no+"号
+
+车离开停车场");
 			this.pop();
 			for(int i=0;!t.isEmpty();i++)
 			{
@@ -143,8 +152,12 @@ public class Stop
 			stretch();
 		data[size]=target;
 		size++;
-		target.state=target.car_no+"号车位于停车场"+size+"号位";
-		System.out.println(target.car_no+"号车进入停车场"+size+"号位");
+		target.state=target.car_no+"号车位于停车场"+size
+
++"号位";
+		System.out.println(target.car_no+"号车进入停车
+
+场"+size+"号位");
 	}
 	boolean isIn(String s)
 	{
@@ -165,7 +178,9 @@ public class Stop
 	void print()
 	{
 		for(int i=0;i<size;i++)
-			System.out.println(data[i].state.toString());
+			System.out.println(data
+
+[i].state.toString());
 	}
 }
 public class Passway 
@@ -203,15 +218,21 @@ public class Passway
 			this.stretch();
 		data[(front+size)%data.length]=target;
 		size++;
-		target.state=target.car_no+"号车位于便道"+size+"号位";
-		System.out.println(target.car_no+"号车进入便道"+size+"号位");
+		target.state=target.car_no+"号车位于便道"+size+"
+
+号位";
+		System.out.println(target.car_no+"号车进入便
+
+道"+size+"号位");
 	}
 	boolean isIn(String s) 
 	{
 		if(size==0)
 			return false;
 		for(int i=0;i<size;i++)
-			if(this.data[(front+i)%data.length].car_no.equals(s))
+			if(this.data[(front
+
++i)%data.length].car_no.equals(s))
 				return true;
 		return false;
 	}
@@ -226,7 +247,9 @@ public class Passway
 	void print()
 	{
 		for(int i=0;i<size;i++)
-			System.out.println(data[(front+i)%data.length].state.toString());
+			System.out.println(data[(front
+
++i)%data.length].state.toString());
 	}
 }
 public class Temp 
@@ -261,7 +284,9 @@ public class Temp
 			stretch();
 		data[size]=target;
 		size++;
-		System.out.println(target.car_no+"号车暂时离开停车场");
+		System.out.println(target.car_no+"号车暂时离开停
+
+车场");
 		target.state=target.car_no+"号车暂时离开停车场";
 	}
 	private void stretch()
@@ -299,20 +324,30 @@ public class cms
 			       passway=newpassway;
 			       for(i=1;i<=5;i++)
 			       {
-			    	   System.out.println("请输入停车位"+i+"号车位汽车的编号，键入$完结");
+			    	   System.out.println("请输入停车
+
+位"+i+"号车位汽车的编号，键入$完结");
 			    	   String str=null;
 			    	   while(true)
 			    	   {
 			    		   str=method.sip();
 			    		   if(stop.isIn(str))
 			    		   {
-			    			   System.out.println("此车已在停车场里，请重新输入！");
-				  		 	   continue;
+			    			   
+
+System.out.println("此车已在停车场里，请重新输入！");
+				  		 	   
+
+continue;
 			    		   }
 			    		   if(passway.isIn(str))
 			    		   {
-			    			   System.out.println("此车已在便道里，请重新输入！");
-				  	 		   continue;
+			    			   
+
+System.out.println("此车已在便道里，请重新输入！");
+				  	 		   
+
+continue;
 				  		   }
 			  			   break;
 			    	   }
@@ -328,20 +363,36 @@ public class cms
 			       if(stop.size==5)
 			    	   for(int n=1;;n++)
 		    		   {
-		    			   System.out.println("请输入便道"+n+"号位汽车的编号，键入$完结");
+		    			   System.out.println("请
+
+输入便道"+n+"号位汽车的编号，键入$完结");
 		    			   String str01=null;
 		    			   while(true)
 				    	   {
-				    		   str01=method.sip();
-				    		   if(stop.isIn(str01))
+				    		   
+
+str01=method.sip();
+				    		   if(stop.isIn
+
+(str01))
 				    		   {
-				    			   System.out.println("此车已在停车场里，请重新输入！");
-					  		 	   continue;
+				    			   
+
+System.out.println("此车已在停车场里，请重新输入！");
+					  		 	  
+
+ continue;
 				    		   }
-				    		   if(passway.isIn(str01))
+				    		   if
+
+(passway.isIn(str01))
 				    		   {
-				    			   System.out.println("此车已在便道里，请重新输入！");
-					  	 		   continue;
+				    			   
+
+System.out.println("此车已在便道里，请重新输入！");
+					  	 		  
+
+ continue;
 					  		   }
 				  			   break;
 				    	   }
@@ -349,25 +400,37 @@ public class cms
 		    				   break;
 		    			   else
 		    			   {
-		    				   Car c=new Car(); 
-		    				   c.car_no=str01;
-		    				   passway.add(c);
+		    				   Car c=new Car
+
+(); 
+		    				   
+
+c.car_no=str01;
+		    				   passway.add
+
+(c);
 		    			   }
 		    		   }
 			       continue;
-			case 2:System.out.println("请输入待进汽车的编号：");
+			case 2:System.out.println("请输入待进汽车
+
+的编号：");
 			       String str02=null;
 			       while(true)
 		    	   {
 		    		   str02=method.sip();
 		    		   if(stop.isIn(str02))
 		    		   {
-		    			   System.out.println("此车已在停车场里，请重新输入！");
+		    			   System.out.println("此
+
+车已在停车场里，请重新输入！");
 			  		 	   continue;
 		    		   }
 		    		   if(passway.isIn(str02))
 		    		   {
-		    			   System.out.println("此车已在便道里，请重新输入！");
+		    			   System.out.println("此
+
+车已在便道里，请重新输入！");
 			  	 		   continue;
 			  		   }
 		  			   break;
@@ -379,41 +442,63 @@ public class cms
 			       else 
 			    	   passway.add(c);
 			       continue;
-			case 3:System.out.println("请输入待出汽车的停车位编号：");
+			case 3:System.out.println("请输入待出汽车
+
+的停车位编号：");
 			       int i2;
 			       i2=method.iip(1,5);
 		    	   if(i2>stop.size)
 		    	   {
-		    		   System.out.println("此车位尚无汽车！");
+		    		   System.out.println("此车位尚无
+
+汽车！");
 		    		   continue;
 		    	   }
 			       stop.pop(i2, passway, temp);
 			       continue;
-			case 4:System.out.println("请选择查询区域：");
+			case 4:System.out.println("请选择查询区域
+
+：");
 			       System.out.println("1:停车场");
 			       System.out.println("2:便道");
 			       System.out.println("3:打印全部");
 			       int i4=method.iip(1,3);
 			       if(i4==1)
 	    		   {
-                       System.out.println("请输入待查询停车场车位编号：");
+                       System.out.println("请输入待查询停车场车位
+
+编号：");
 	    			   int i41=method.iip(1,5);
 	    			   if(stop.size<i41)
-		    	    	   System.out.println("此车位尚无汽车！");
+		    	    	   System.out.println("此车位尚无
+
+汽车！");
 		    	       else
-		    		       System.out.println(stop.data[i41-1].state.toString());
+		    		       System.out.println
+
+(stop.data[i41-1].state.toString());
 	    		   }
 	    		   else
 	    			   if(i4==2)
 	    			   {
-		    			   System.out.println("请输入待查询便道车位编号：");
-		    			   int i42=method.iip(1, 100);
+		    			   System.out.println("请
+
+输入待查询便道车位编号：");
+		    			   int i42=method.iip(1, 
+
+100);
 		    			   if(passway.size<i42)
-			    			   System.out.println("此车位尚无汽车！");
+			    			   
+
+System.out.println("此车位尚无汽车！");
 			    		   else
 			    		   {
-			    			   int ii=(i42-1+passway.front)%passway.data.length;
-			    			   System.out.println(passway.data[ii].state.toString());
+			    			   int ii=(i42-
+
+1+passway.front)%passway.data.length;
+			    			   
+
+System.out.println(passway.data[ii].state.toString());
 			    		   }
 		    	       }
 	    			   else
@@ -422,7 +507,9 @@ public class cms
 	    				   passway.print();
 	    			   }
 				   continue;
-			case 5:System.out.println("欢迎再次使用！");
+			case 5:System.out.println("欢迎再次使用！
+
+");
 			}
 			break;
 		}
