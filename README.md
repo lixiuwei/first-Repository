@@ -1,564 +1,430 @@
 first-Repository
 ================
-#include<stdio.h>
-
-#include<malloc.h>
-
-#define Size 3//停车场的容量
-
-#define Price 0.1//每分钟的价钱
-
-#define Null 0
 
 
-typedef struct time//定义时间
-
+import java.io.*;
+public class Method
 {
-
-int hour;//小时
-
-int min;//分钟
-
-}Time;//时间结点
-
-
-
-typedef struct 
-
-{
-
-int car_number;//车牌号
-
-int number;
-
-Time arrivetime,leavetime;//到达时间，离开时间
-
-int fee;//所需费用
-
-}car_info;//车辆的信息结点
-
-
-
-typedef struct
-
-{
-
-car_info *north;//车场北
-
-car_info *south;//车场南
-
-int number;//停车数量
-
-int car_number;
-
-}car_park;//停车场
-
-
-
-typedef struct
-
-{
-
-car_info *west;//车场西
-
-car_info *east;//车场东
-
-int number;//停车数量
-
-
-}car_park_back;//倒车道
-
-
-
-typedef struct car//链队列的定义
-
-{
-
-car_info data;//数据域
-
-struct car *next; //指针域 
-
-}carnode;
-
-typedef struct node
-
-{
-
-carnode *head;//头结点
-
-carnode *rear;//尾结点
-
-int number;//停车数量
-
-}car_park_temp;//便道
-
-
-
-void init_car_park(car_park *cp)//停车场初始化
-
-{
-
-cp->north=(car_info *)malloc(Size * sizeof(car_info));//申请空间
-
-if(!cp->north) printf("error\n");//申请空间失败
-
-cp->south=cp->north;
-
-cp->number=0;//构造一个空栈
-
+	private int intinput() throws IOException,NumberFormatException
+	{
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		String str=br.readLine();
+		int i=Integer.parseInt(str);
+		return i;
+	}
+	private String stringinput() throws IOException
+	{
+		BufferedReader br=new BufferedReader(new InputStreamReader(System.in));
+		String str=br.readLine();
+		return str;
+	}
+	private boolean between(int n,int min,int max)
+	{
+		for(int i=min;i<=max;i++)
+			if(n==i)
+				return true;
+		return false;
+	}
+	private void printerror()
+	{
+		System.out.println("输入错误！请重新输入！");
+	}
+	String sip()
+	{
+		String str;
+		while(true)
+		{
+			try
+			{
+				str=this.stringinput();
+			}
+			catch(IOException e)
+			{
+				this.printerror();
+				continue;
+			}
+			break;
+		}
+		return str;
+	}
+	int iip(int min,int max)
+	{
+		int n=0;
+		while(true)
+		{
+			try
+			{
+				n=this.intinput();
+			}
+			catch(IOException e)
+	    	{
+	    		this.printerror();
+	    		continue;
+	    	}
+	    	catch(NumberFormatException e)
+	    	{
+	    		this.printerror();
+	    		continue;
+	    	}
+	    	if(!this.between(n,min,max))
+	    	{
+	    		this.printerror();
+	    		continue;
+	    	}
+	    	break;
+		}
+		return n;
+	}
 }
-
-
-
-void enter_car_park(car_park *cp,car_info *car)//进入停车场
-
+public class Car     
 {
-
-*cp->south++=*car;
-
-cp->number++; //修改当前栈顶指针
-
+	String car_no;
+	String state;
+	Car()
+	{
+		car_no=null;
+		state=null;
+	}
 }
-
-
-
-int notfull_car_park(car_park *cp)
-
-//判断停车场是否有空位
-
+public class Stop 
 {
-
-int e;
-
-if(cp->south-cp->north>=Size) //从南到北的车辆数为5，则停车场已满
-
-e=0; //停车场满返回0
-
-else
-
-e=1; //停车场未满返回1
-
-return(e);
-
+	Car data[];
+	int size;
+	Stop()
+	{
+		data=new Car[1];
+		size=0;
+	}
+	private Car peek()
+	{
+		return data[size-1];
+	}
+	private boolean isFull()
+	{
+		return size==data.length;
+	}
+	private Car pop()
+	{
+		size--;
+		return data[size];
+	}
+	void pop(int location,Passway p,Temp t)  
+	{
+		if(location==this.size)
+		{
+			System.out.println(this.peek().car_no+"号车离开停车场");
+			this.pop();
+		}
+		else
+		{
+			int f=this.size;
+			for(int i=1;i<=f-location;i++)
+			{
+				t.push(this.peek());
+				this.pop();
+			}
+			System.out.println(this.peek().car_no+"号车离开停车场");
+			this.pop();
+			for(int i=0;!t.isEmpty();i++)
+			{
+				this.push(t.peek());
+				t.pop();
+			}
+		}
+		if(!p.isEmpty()) 
+		{
+			this.push(p.data[p.front]);
+			p.remove();
+		}
+	}
+	void push(Car target)
+	{
+		if(this.isFull())
+			stretch();
+		data[size]=target;
+		size++;
+		target.state=target.car_no+"号车位于停车场"+size+"号位";
+		System.out.println(target.car_no+"号车进入停车场"+size+"号位");
+	}
+	boolean isIn(String s)
+	{
+		if(size==0)
+			return false;
+		for(int i=0;i<size;i++)
+			if(data[i].car_no.equals(s))
+				return true;
+		return false;
+	}
+	private void stretch()
+	{
+		Car[] newData=new Car[data.length*2];
+		for(int i=0;i<data.length;i++)
+			newData[i]=data[i];
+		data=newData;
+	}
+	void print()
+	{
+		for(int i=0;i<size;i++)
+			System.out.println(data[i].state.toString());
+	}
 }
-
-int notempty_car_park_back(car_park_back *cpb)
-
-//判断倒车道是否还有车
-
+public class Passway 
 {
-
-int e;
-
-if(cpb->east==cpb->west)//倒车道为空
-
-e=0; //返回0
-
-else
-
-e=1; //倒车道有车返回1
-
-return(e);
-
+	Car [] data;
+	int size;
+	int front;
+	Passway()
+	{
+		data=new Car[1];
+		size=0;
+		front=0;
+	}
+	boolean isEmpty()
+	{
+		return size==0;
+	}
+	private boolean isFull()
+	{
+		return size==data.length;
+	}
+	public Car remove()
+	{
+		Car result=data[front];
+		front=(front+1)%data.length;
+		size--;
+		Passway t=new Passway();  
+		for(int i=0;i<this.size;i++)
+			t.add(this.data[front+i]);
+		return result;
+	}
+	void add(Car target)
+	{
+		if(this.isFull())
+			this.stretch();
+		data[(front+size)%data.length]=target;
+		size++;
+		target.state=target.car_no+"号车位于便道"+size+"号位";
+		System.out.println(target.car_no+"号车进入便道"+size+"号位");
+	}
+	boolean isIn(String s) 
+	{
+		if(size==0)
+			return false;
+		for(int i=0;i<size;i++)
+			if(this.data[(front+i)%data.length].car_no.equals(s))
+				return true;
+		return false;
+	}
+	private void stretch()
+	{
+		Car newData[]=new Car[data.length*2];
+		for(int i=0;i<data.length;i++)
+			newData[i]=data[(front+i)%data.length];
+		data=newData;
+		front=0;
+	}
+	void print()
+	{
+		for(int i=0;i<size;i++)
+			System.out.println(data[(front+i)%data.length].state.toString());
+	}
 }
-
-
-
-void back_car_park(car_park *cp,car_info *car)
-
-//从停车场倒车
-
+public class Temp 
 {
-
-*car=*cp->south;
-
-cp->number--; 
-
+	private Car[] data;
+	private int size;
+	Temp()
+	{
+		data=new Car[1];
+		size=0;
+	}
+	boolean isEmpty()
+	{
+		return size==0;
+	}
+	Car peek()
+	{
+		return data[size-1];
+	}
+	private boolean isFull()
+	{
+		return size==data.length;
+	}
+	Car pop()
+	{
+		size--;
+		return data[size];
+	}
+	void push(Car target)
+	{
+		if(this.isFull())
+			stretch();
+		data[size]=target;
+		size++;
+		System.out.println(target.car_no+"号车暂时离开停车场");
+		target.state=target.car_no+"号车暂时离开停车场";
+	}
+	private void stretch()
+	{
+		Car[] newData=new Car[data.length*2];
+		for(int i=0;i<data.length;i++)
+			newData[i]=data[i];
+		data=newData;
+	}
 }
-
-
-
-void init_car_park_back(car_park_back *cpb)//初始化倒车道
-
+public class cms
 {
-
-cpb->west=(car_info *)malloc(Size *sizeof(car_info));//申请空间
-
-if(!cpb->west) printf("error\n");//申请空间失败
-
-cpb->east=cpb->west;
-
-cpb->number=0;//构造一个空栈
-
+	public static void main(String args[])
+	{
+		Stop stop=new Stop();
+		Passway passway=new Passway();
+		Temp temp=new Temp();
+		Method method=new Method();
+		System.out.println("欢迎使用停车场管理系统！");
+		while(true)
+		{
+			System.out.println("请选择操作");
+			System.out.println("1: 初始化");
+			System.out.println("2：进车");
+			System.out.println("3：出车");
+			System.out.println("4：查询");
+			System.out.println("5：退出");
+			int select=method.iip(1,5);
+			switch(select)
+			{
+			case 1:int i;
+			       Stop newstop=new Stop();
+			       Passway newpassway=new Passway();
+			       stop=newstop;
+			       passway=newpassway;
+			       for(i=1;i<=5;i++)
+			       {
+			    	   System.out.println("请输入停车位"+i+"号车位汽车的编号，键入$完结");
+			    	   String str=null;
+			    	   while(true)
+			    	   {
+			    		   str=method.sip();
+			    		   if(stop.isIn(str))
+			    		   {
+			    			   System.out.println("此车已在停车场里，请重新输入！");
+				  		 	   continue;
+			    		   }
+			    		   if(passway.isIn(str))
+			    		   {
+			    			   System.out.println("此车已在便道里，请重新输入！");
+				  	 		   continue;
+				  		   }
+			  			   break;
+			    	   }
+			    	   if(str.equals("$"))
+			    		   break;
+			    	   else
+			    	   {
+			    		   Car c=new Car();
+			    		   c.car_no=str;
+			    		   stop.push(c);
+			    	   }
+			       }
+			       if(stop.size==5)
+			    	   for(int n=1;;n++)
+		    		   {
+		    			   System.out.println("请输入便道"+n+"号位汽车的编号，键入$完结");
+		    			   String str01=null;
+		    			   while(true)
+				    	   {
+				    		   str01=method.sip();
+				    		   if(stop.isIn(str01))
+				    		   {
+				    			   System.out.println("此车已在停车场里，请重新输入！");
+					  		 	   continue;
+				    		   }
+				    		   if(passway.isIn(str01))
+				    		   {
+				    			   System.out.println("此车已在便道里，请重新输入！");
+					  	 		   continue;
+					  		   }
+				  			   break;
+				    	   }
+		    			   if(str01.equals("$"))
+		    				   break;
+		    			   else
+		    			   {
+		    				   Car c=new Car(); 
+		    				   c.car_no=str01;
+		    				   passway.add(c);
+		    			   }
+		    		   }
+			       continue;
+			case 2:System.out.println("请输入待进汽车的编号：");
+			       String str02=null;
+			       while(true)
+		    	   {
+		    		   str02=method.sip();
+		    		   if(stop.isIn(str02))
+		    		   {
+		    			   System.out.println("此车已在停车场里，请重新输入！");
+			  		 	   continue;
+		    		   }
+		    		   if(passway.isIn(str02))
+		    		   {
+		    			   System.out.println("此车已在便道里，请重新输入！");
+			  	 		   continue;
+			  		   }
+		  			   break;
+		    	   }
+			       Car c=new Car();
+			       c.car_no=str02;
+			       if(stop.size<5)  
+			    	   stop.push(c);
+			       else 
+			    	   passway.add(c);
+			       continue;
+			case 3:System.out.println("请输入待出汽车的停车位编号：");
+			       int i2;
+			       i2=method.iip(1,5);
+		    	   if(i2>stop.size)
+		    	   {
+		    		   System.out.println("此车位尚无汽车！");
+		    		   continue;
+		    	   }
+			       stop.pop(i2, passway, temp);
+			       continue;
+			case 4:System.out.println("请选择查询区域：");
+			       System.out.println("1:停车场");
+			       System.out.println("2:便道");
+			       System.out.println("3:打印全部");
+			       int i4=method.iip(1,3);
+			       if(i4==1)
+	    		   {
+                       System.out.println("请输入待查询停车场车位编号：");
+	    			   int i41=method.iip(1,5);
+	    			   if(stop.size<i41)
+		    	    	   System.out.println("此车位尚无汽车！");
+		    	       else
+		    		       System.out.println(stop.data[i41-1].state.toString());
+	    		   }
+	    		   else
+	    			   if(i4==2)
+	    			   {
+		    			   System.out.println("请输入待查询便道车位编号：");
+		    			   int i42=method.iip(1, 100);
+		    			   if(passway.size<i42)
+			    			   System.out.println("此车位尚无汽车！");
+			    		   else
+			    		   {
+			    			   int ii=(i42-1+passway.front)%passway.data.length;
+			    			   System.out.println(passway.data[ii].state.toString());
+			    		   }
+		    	       }
+	    			   else
+	    			   {
+	    				   stop.print();
+	    				   passway.print();
+	    			   }
+				   continue;
+			case 5:System.out.println("欢迎再次使用！");
+			}
+			break;
+		}
+    }
 }
-
-
-
-void enter_car_park_back(car_park_back *cpb,car_info *car)//进入倒车道
-
-{
-
-*cpb->east++=*car;
-
-cpb->number++;//修改当前的栈顶指针
-
-}
-
-
-
-void leave_car_park_back(car_park_back *cpb,car_info *car)//离开倒车道
-
-{
-
-*car=*--cpb->east;
-
-cpb->number--;
-
-}
-
-
-
-void init_car_park_temp(car_park_temp *cpt)//初始化便道
-
-//将cpt初始化为一个空的链队列
-
-{
-
-cpt->head=cpt->rear=(carnode *)malloc(sizeof(carnode));//申请空间
-
-cpt->head->next=Null;
-
-cpt->number=0; 
-
-}
-
-
-
-void enter_car_park_temp(car_park_temp *cpt,car_info *car)
-
-//进入便道
-
-//将数据元素car插入到队列cpt中
-
-{
-
-carnode *p;
-
-p=(carnode *)malloc(sizeof(carnode));//申请结点p
-
-p->data=*car;
-
-p->next=Null;
-
-cpt->head->next=p;
-
-cpt->rear=p;
-
-cpt->number++;
-
-}
-
-
-
-void leave_car_park_temp(car_park_temp *cpt,car_info *car,car_park *cp)
-
-//离开便道，将队列cpt的队头元素出队
-
-{ 
-
-carnode *p;
-
-p=cpt->head->next;
-
-*car=p->data;
-
-cpt->head=p->next; //队头元素p出队 
-
-enter_car_park(cp, car);//调用进入停车场的函数
-
-cpt->number--; //便道的车辆少1
-
-}
-
-
-
-int notempty_car_park_temp(car_park_temp *cpt)
-
-//判断便道是否还有车
-
-{
-
-int e;
-
-if(cpt->head==cpt->rear)
-
-e=0; //便道为空则返回0
-
-else
-
-e=1; //便道不空则返回1
-
-return(e);
-
-}
-
-
-
-
-
-void leave_car_park(car_park *cp,car_info *car,car_park_back *cpb)
-
-//某车离开停车场，并计算该车的费用
-
-{
-
-int e, a1,a2,b1,b2,t;
-
-car_info *car1,*car2,*car3;//三辆车的信息
-
-car1=(car_info *)malloc(sizeof(car_info));//为第一辆车申请空间
-
-car2=(car_info *)malloc(sizeof(car_info));//为第二辆车申请空间
-
-car3=(car_info *)malloc(sizeof(car_info));//为第三辆车申请空间
-
-
-while((--cp->south)->car_number!=car->car_number)//从停车场倒车
-
-{
-
-back_car_park(cp,car1);//出停车场
-
-enter_car_park_back(cpb,car1);//进入倒车道
-
-}
-
-
-
-car->arrivetime.hour=cp->south->arrivetime.hour;car->arrivetime.min=cp->south->arrivetime.min;
-
-a1=car->arrivetime.hour;
-
-a2=car->arrivetime.min;
-
-b1=car->leavetime.hour;
-
-b2=car->leavetime.min;
-
-t=(b1-a1)*60+(b2-a2);//计算车辆在停车场停留的时间
-
-car->fee=t*Price;//计算车辆应交的费用
-
-
-
-printf("\n车辆停留的时间是: %3d min\n",t);//输出车辆停留的时间
-
-printf("\n应交的费用是 %3d 元\n",car->fee);//输出车辆应交的费用
-
-e=notempty_car_park_back(cpb);//判断车道是否为空
-
-while(e==1)
-
-{
-
-leave_car_park_back(cpb,car2);
-
-enter_car_park(cp,car2);
-
-e=notempty_car_park_back(cpb);
-
-}//离开倒车道，进入停车场
-
-cp->number--;
-
-}
-
-
-
-void List1(car_park *cp) /*列表显示车场信息*/ 
-
-{int a;
-
-int b;
-
-int i;
-
-if(cp->number>0) /*判断车站内是否有车*/ 
-
-{ 
-
-for( i=0;i<cp->number;i++)
-
-{
-
-cp->south--;
-
-a=cp->south->car_number;
-
-b=cp->number-i;
-
-printf("\n位置%d",b);
-
-printf("\n车牌号%d",a); 
-
-}
-
-}
-
-else 
-
-printf("\n车场里没有车");
-
-} 
-
-
-
-void List2(car_park_temp *cpt) /*列表显示便道信息*/ 
-
-{ int a;
-
-int b;
-
-if(cpt->number>0)
-
-{
-
-a=cpt->number;
-
-b=cpt->head->data.car_number;
-
-printf("\n便道里有%d辆车",a); 
-
-printf("\n车牌号为:%d",b);
-
-}
-
-else 
-
-printf("\n便道里没有车");
-
-} 
-
-
-
-
-void main()
-
-{
-
-char ch;
-
-int e,n;
-
-//QueueNode *p;
-
-car_park_back *cpb; 
-
-car_park *cp; 
-
-car_park_temp *cpt; 
-
-car_info *car; 
-
-cp=(car_park *)malloc(sizeof(car_park));
-
-cpb=(car_park_back *)malloc(sizeof(car_park));
-
-cpt=(car_park_temp *)malloc(sizeof(car_park_temp));
-
-init_car_park(cp); //初始化停车场
-
-init_car_park_back(cpb);//初始化倒车道
-
-init_car_park_temp(cpt);//初始化便道
-
-
-do
-
-{
-
-car=(car_info *)malloc(sizeof(car_info));
-
-printf("\n\n************ 模拟停车场管理问题***************\n\n"); 
-
-printf("请选择你的操作 \n'A' 到达\n'L'离开\n'C'查看停车场信息 \n'D'查看便道信息\n'0'退出:\n");
-
-scanf("%s",&ch);
-
-e=notfull_car_park(cp);
-
-switch(ch)
-
-{
-
-case'A':if(e==1)//停车场未满
-
-{
-
-printf("请输入车牌号:\n");
-
-scanf("%d",&car->car_number);
-
-printf("请输入到达时间，hour min:\n");
-
-scanf("%d %d",&(*car).arrivetime.hour,&(*car).arrivetime.min);
-
-enter_car_park(cp,car);//进入停车场
-
-printf("此车在停车场中,位置在: %d\n",cp->number);
-
-}
-
-else//停车场已满
-
-
-{
-
-car_info *car;
-
-car=(car_info*)malloc(sizeof(car_info));
-
-printf("请输入车牌号:\n");
-
-scanf("%d",&car->car_number);//进入便道
-
-enter_car_park_temp(cpt,car);
-
-printf("停车场已满,车在便道中,位置是: %d\n",cpt->number);
-
-}
-
-break;
-
-case 'L':
-
-printf("请输入车牌号:\n");
-
-scanf("%d",&car->car_number);
-
-printf("请输入离开时间hour min:\n"); 
-
-scanf("%d %d",&(*car).leavetime.hour,&(*car).leavetime.min);
-
-leave_car_park(cp,car,cpb);//离开停车场
-
-n=notempty_car_park_temp(cpt);//判断便道车辆是否为空
-
-if(n==1)//便道上有车辆
-
-leave_car_park_temp(cpt,car,cp);//离开便道
-
-break;
-
-case'C': List1(cp); break;
-
-case'D': List2(cpt); break;
-
-default:break;
-
-}
-
-}while(ch!='0');//退出系统
-
-}
-
